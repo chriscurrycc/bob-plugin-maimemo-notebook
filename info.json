@@ -1,0 +1,97 @@
+{
+  "identifier": "com.tianzhich.bobplugin.maimemo.notebook",
+  "version": "0.1.0",
+  "category": "translate",
+  "name": "墨墨云词本",
+  "summary": "导入查询单词到墨墨云词本，且支持关联查询句子和译文",
+  "icon": "",
+  "author": "Stephen Tian",
+  "homepage": "",
+  "appcast": "",
+  "minBobVersion": "0.5.0",
+  "options": [
+    {
+      "identifier": "maimemoToken",
+      "type": "text",
+      "title": "墨墨开放 API Token",
+      "desc": "请填写墨墨开放 API Token，获取方式请参考 https://open.maimemo.com/",
+      "textConfig": {
+        "type": "secure"
+      }
+    },
+    {
+      "identifier": "notepadId",
+      "type": "text",
+      "title": "墨墨云词本 ID",
+      "desc": "请前往 https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads 查询已有云词本。如果不填，则默认创建一个新词本",
+      "textConfig": {
+        "type": "secure"
+      }
+    },
+    {
+      "identifier": "canAddSentence",
+      "type": "menu",
+      "title": "添加例句到生词",
+      "desc": "如果需要支持添加例句到选定生词，请打开此项",
+      "menuValues": [
+        {
+          "value": "true",
+          "title": "是",
+          "defaultPluginName": "墨墨云词本（例句）"
+        },
+        {
+          "value": "false",
+          "title": "否",
+          "defaultPluginName": "墨墨云词本"
+        }
+      ],
+      "defaultValue": "false",
+      "isKeyOption": true
+    },
+    {
+      "identifier": "bigModelApiKey",
+      "type": "text",
+      "title": "智谱 API 密钥"
+    },
+    {
+      "identifier": "bigModelModel",
+      "type": "menu",
+      "title": "智谱语言模型",
+      "defaultValue": "GLM-4-Flash",
+      "menuValues": [
+        {
+          "title": "高智能旗舰[GLM-4-Plus]",
+          "value": "GLM-4-Plus"
+        },
+        {
+          "title": "超长输入[GLM-4-Long]",
+          "value": "GLM-4-Long"
+        },
+        {
+          "title": "极速推理[GLM-4-AirX]",
+          "value": "GLM-4-AirX"
+        },
+        {
+          "title": "高性价比[GLM-4-Air]",
+          "value": "GLM-4-Air"
+        },
+        {
+          "title": "免费调用[GLM-4-Flash]",
+          "value": "GLM-4-Flash"
+        },
+        {
+          "title": "高速低价[GLM-4-FlashX]",
+          "value": "GLM-4-FlashX"
+        },
+        {
+          "title": "Agent模型[GLM-4-AllTools]",
+          "value": "GLM-4-AllTools"
+        },
+        {
+          "title": "旧版旗舰[GLM-4]",
+          "value": "GLM-4"
+        }
+      ]
+    }
+  ]
+}
