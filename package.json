@@ -4,8 +4,9 @@
   "description": "Bob 查询的单词导入到墨墨背单词",
   "main": "dist/main.js",
   "scripts": {
+    "clean": "rm -rf dist",
     "prebuild": "chmod +x scripts/zip.js",
-    "build": "rollup -c",
+    "build": "npm run clean && rollup -c",
     "dev": "rollup -c rollup.config.dev.js --watch"
   },
   "devDependencies": {
