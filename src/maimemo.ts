@@ -1,20 +1,42 @@
 const apiEndpoint = "https://open.maimemo.com/open/api/v1";
-const notepadIdFilePath = "$sandbox/notepad-id.txt";
+export const notepadIdFilePath = "$sandbox/notepad-id.txt";
+
+interface MaimemoResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+}
+
+type MaimemoNotepadResponse = MaimemoResponse<{
+  notepad?: {
+    id: string;
+    status: string;
+    content: string;
+    title: string;
+    brief: string;
+    tags: string[];
+  };
+}>;
+
+type MaimemoVocabularyResponse = MaimemoResponse<{
+  voc?: {
+    id: string;
+  };
+}>;
 
 function getHeader() {
-  const token = $option.maimemoToken;
+  const token = $option.maimemoToken!;
   return {
     "Content-Type": "application/json",
     Authorization: token.startsWith("Bearer") ? token : `Bearer ${token}`,
   };
 }
 
-function createNotepad(words) {
+export async function createNotepad(words: string[]) {
   const header = getHeader();
   const todayDate = new Date().toLocaleDateString("en-CA");
 
   return $http
-    .request({
+    .request<MaimemoNotepadResponse>({
       method: "POST",
       url: `${apiEndpoint}/notepads`,
       header,
@@ -30,8 +52,8 @@ function createNotepad(words) {
     })
     .then((_resp) => {
       let resp = _resp.data;
-      if (resp.success && resp.data.notepad) {
-        notepadId = resp.data.notepad.id;
+      if (resp.success && resp.data?.notepad) {
+        const notepadId = resp.data.notepad.id;
         $file.write({
           data: $data.fromUTF8(notepadId),
           path: notepadIdFilePath,
@@ -43,19 +65,19 @@ function createNotepad(words) {
     });
 }
 
-function addWordsToNotepad(notepadId, words) {
+export async function addWordsToNotepad(notepadId: string, words: string[]) {
   const header = getHeader();
   const todayDate = new Date().toLocaleDateString("en-CA");
 
   return $http
-    .request({
+    .request<MaimemoNotepadResponse>({
       method: "GET",
       url: `${apiEndpoint}/notepads/${notepadId}`,
       header,
     })
     .then((_resp) => {
       const resp = _resp.data;
-      if (resp.success && resp.data.notepad) {
+      if (resp.success && resp.data && resp.data.notepad) {
         const { status, content, title, brief, tags } = resp.data.notepad;
         const lines = content.split("\n").map((line) => line.trim());
         let targetLineIndex = lines.findIndex((line) =>
@@ -81,7 +103,7 @@ function addWordsToNotepad(notepadId, words) {
       }
     })
     .then((notepad) => {
-      return $http.request({
+      return $http.request<MaimemoNotepadResponse>({
         method: "POST",
         url: `${apiEndpoint}/notepads/${notepadId}`,
         header,
@@ -100,25 +122,29 @@ function addWordsToNotepad(notepadId, words) {
     });
 }
 
-function addSentenceToWord(word, sentence, translation) {
+export async function addSentenceToWord(
+  word: string,
+  sentence: string,
+  translation: string
+) {
   const header = getHeader();
 
   return $http
-    .request({
+    .request<MaimemoVocabularyResponse>({
       method: "GET",
       url: `${apiEndpoint}/vocabulary?spelling=${word}`,
       header,
     })
     .then((_resp) => {
       let resp = _resp.data;
-      if (resp.success && resp.data.voc.id) {
+      if (resp.success && resp.data && resp.data.voc?.id) {
         return resp.data.voc.id;
       } else {
         throw new Error("未找到单词");
       }
     })
     .then((wordId) => {
-      return $http.request({
+      return $http.request<MaimemoResponse>({
         method: "POST",
         url: `${apiEndpoint}/phrases`,
         header,
@@ -142,10 +168,3 @@ function addSentenceToWord(word, sentence, translation) {
       }
     });
 }
-
-module.exports = {
-  createNotepad,
-  addWordsToNotepad,
-  addSentenceToWord,
-  notepadIdFilePath,
-};

@@ -1,7 +1,15 @@
 const bigModelApiEndpoint =
   "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
-function initBigModelReqBody(sentence) {
+interface BigModelCompletionResponse {
+  choices?: {
+    message?: {
+      content?: string;
+    };
+  }[];
+}
+
+export function initBigModelReqBody(sentence: string) {
   const detectFrom = "英语";
   const detectTo = "中文简体";
   const prompt =
@@ -42,13 +50,13 @@ function initBigModelReqBody(sentence) {
   };
 }
 
-function translateByBigModel(sentence) {
+export async function translateByBigModel(sentence: string) {
   return $http
-    .request({
+    .request<BigModelCompletionResponse>({
       method: "POST",
       url: bigModelApiEndpoint,
       header: {
-        Authorization: $option.bigModelApiKey,
+        Authorization: $option.bigModelApiKey!,
         "Content-Type": "application/json",
       },
       body: initBigModelReqBody(sentence),
@@ -64,7 +72,3 @@ function translateByBigModel(sentence) {
       }
     });
 }
-
-module.exports = {
-  translateByBigModel,
-};

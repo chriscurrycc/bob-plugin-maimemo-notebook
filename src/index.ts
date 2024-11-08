@@ -1,16 +1,17 @@
-const {
+import {
   createNotepad,
   addSentenceToWord,
   addWordsToNotepad,
   notepadIdFilePath,
-} = require("./maimemo");
-const { translateByBigModel } = require("./translate");
+} from "./maimemo";
+import { translateByBigModel } from "./translate";
+import { BobQuery, BobTranslationErrorType } from "./types";
 
-function supportLanguages() {
+export function supportLanguages() {
   return ["zh-Hans", "en"];
 }
 
-function translate(query) {
+export function translate(query: BobQuery) {
   const { text, detectFrom, onCompletion } = query;
   const {
     maimemoToken,
@@ -22,7 +23,7 @@ function translate(query) {
   if (detectFrom !== "en") {
     onCompletion({
       error: {
-        type: "unsupportedLanguage",
+        type: BobTranslationErrorType.UnSupportedLanguage,
         message: "墨墨云词本只支持添加英文单词",
       },
     });
@@ -34,7 +35,12 @@ function translate(query) {
   const canAddSentence = _canAddSentence === "true";
 
   if (maybeSentence && !canAddSentence) {
-    onCompletion({ error: { type: "notFound", message: "未检测到单词" } });
+    onCompletion({
+      error: {
+        type: BobTranslationErrorType.NotFound,
+        message: "未检测到单词",
+      },
+    });
     return;
   }
 
@@ -48,13 +54,21 @@ function translate(query) {
 
   if (!maimemoToken) {
     onCompletion({
-      error: { type: "secretKey", message: "墨墨开放 API Token 未配置" },
+      error: {
+        type: BobTranslationErrorType.NoSecretKey,
+        message: "墨墨开放 API Token 未配置",
+      },
     });
     return;
   }
 
   if (words.length === 0) {
-    onCompletion({ error: { type: "notFound", message: "未检测到单词" } });
+    onCompletion({
+      error: {
+        type: BobTranslationErrorType.NotFound,
+        message: "未检测到单词",
+      },
+    });
     return;
   }
 
@@ -84,7 +98,7 @@ function translate(query) {
             } else {
               onCompletion({
                 error: {
-                  type: "network",
+                  type: BobTranslationErrorType.Network,
                   message: `${
                     partMessage ? partMessage + "，" : ""
                   }例句创建失败`,
@@ -102,7 +116,7 @@ function translate(query) {
         if (finished) {
           onCompletion({
             error: {
-              type: "network",
+              type: BobTranslationErrorType.Network,
               message: `${
                 partMessage ? partMessage + "，" : ""
               }${currentPartMessage}`,
@@ -147,7 +161,7 @@ function translate(query) {
       if (finished) {
         onCompletion({
           error: {
-            type: "network",
+            type: BobTranslationErrorType.Network,
             message: `${error.message}${partMessage ? "，" + partMessage : ""}`,
           },
         });
