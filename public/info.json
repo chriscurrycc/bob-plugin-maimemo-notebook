@@ -4,10 +4,9 @@
   "category": "translate",
   "name": "墨墨云词本",
   "summary": "导入查询单词到墨墨云词本，且支持关联查询句子和译文",
-  "icon": "",
-  "author": "Stephen Tian",
-  "homepage": "",
-  "appcast": "",
+  "author": "Chris Curry <hichriscurry@gmail.com>",
+  "homepage": "https://github.com/chriscurrycc/bob-plugin-maimemo-notebook",
+  "appcast": "https://github.com/chriscurrycc/bob-plugin-maimemo-notebook/raw/main/appcast.json",
   "minBobVersion": "0.5.0",
   "options": [
     {
