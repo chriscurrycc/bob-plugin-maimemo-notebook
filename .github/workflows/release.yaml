@@ -25,12 +25,15 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          npm run build
+          ls -la dist/
 
       - name: Upload .bobplugin to GitHub Release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "dist/bobplugin-maimemo-notebook.bobplugin"
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: dist/bobplugin-maimemo-notebook.bobplugin
+          skipArtifacts: true 
