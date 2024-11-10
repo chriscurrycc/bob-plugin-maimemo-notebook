@@ -24,11 +24,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: |
-          npm run build
-          ls -la dist/
-
       - name: Upload .bobplugin to GitHub Release
         uses: ncipollo/release-action@v1
         with:
@@ -36,4 +31,3 @@ jobs:
           artifacts: "dist/bobplugin-maimemo-notebook.bobplugin"
           tag: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          skipArtifacts: true 
