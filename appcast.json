@@ -4,10 +4,10 @@
     {
       "version": "0.0.1",
       "desc": "Initial release",
-      "sha256": "4ebf2c1a0ffc1bd3e80db76ae3a97a03c6e6036024610d3064e888539a37d890",
+      "sha256": "9a0fe87020644d9da05895483c0fff0dfb16cbb3a9cae1facfb497739ec49db1",
       "url": "https://github.com/chriscurrycc/bob-plugin-maimemo-notebook/releases/download/v0.0.1/bobplugin-maimemo-notebook.bobplugin",
       "minBobVersion": "0.5.0",
-      "timestamp": 1731247076000
+      "timestamp": 1731252613000
     }
   ]
 }
