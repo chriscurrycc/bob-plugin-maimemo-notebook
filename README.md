@@ -84,13 +84,13 @@
 
 > 默认的智谱语言模型为免费的「GLM-4-Flash」，如果要切换到更高质量的模型请自行参考[智谱官方价格](https://open.bigmodel.cn/pricing)决定
 
-3. 将「添加例句到生词」切换为「是」
+2. 将「添加例句到生词」切换为「是」
 
 ![step3](https://github.com/user-attachments/assets/79518b40-d37f-4b38-95d0-a03374188c85)
 
-4. 保存配置
+3. 保存配置
 
-5. 将例句识别这个版本折叠起来（强烈推荐，这样可以做到单词添加完毕后再手动执行插件）
+4. 将例句识别这个版本折叠起来（强烈推荐，这样可以做到单词添加完毕后再手动执行插件）
 
 ![step4](https://github.com/user-attachments/assets/bd07333a-2b5d-4586-9d41-1bd1f84a35cc)
 
