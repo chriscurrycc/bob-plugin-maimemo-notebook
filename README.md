@@ -16,6 +16,8 @@
   </p>
 </div>
 
+> 我开发了一个 iOS 快捷指令来实现同样的功能，如果你是 iPhone/iPad 用户，请[点击此处查看使用文档](https://memo.chriscurry.cc/m/NtMnTGVJfkXuLoRJaMYKy5)
+
 ## 演示
 
 ### Bob 插件使用
