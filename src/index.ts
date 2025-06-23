@@ -96,12 +96,16 @@ export function translate(query: BobQuery) {
                 },
               });
             } else {
+              const failReason = results.find(
+                (task) => task.status === "rejected"
+              )?.reason;
+
               onCompletion({
                 error: {
                   type: BobTranslationErrorType.Network,
                   message: `${
                     partMessage ? partMessage + "，" : ""
-                  }例句创建失败`,
+                  }例句创建失败（${failReason}）`,
                 },
               });
             }
