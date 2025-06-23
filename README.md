@@ -66,7 +66,7 @@
 
 5. 把 Token 填入 Bob 偏好设置 > 服务 > 此插件配置界面的「墨墨开放 API Token」的输入框中
 
-  - 插件会帮你生成一个「Bob Plugin」的云词本来录入所有从 Bob 查询的生词。如果想把生词添加到自己已有的云词本，也可以在[墨墨开放 API 平台](https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads)查询自己的云词本列表，并把对应词本 ID 复制填入到「墨墨云词本 ID」配置项
+> 插件会帮你生成一个「Bob Plugin（2025）」的云词本来录入特定年度（例如 2025）在 Bob 查询的生词。如果想把生词添加到自己已有的云词本，也可以在[墨墨开放 API 平台](https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads)查询自己的云词本列表，并把对应词本 ID 复制填入到「墨墨云词本 ID」配置项
 
 ![step2](https://github.com/user-attachments/assets/af829e76-f990-4419-bbd9-e4a5f41e1899)
 
@@ -97,6 +97,10 @@
 4. 将例句识别这个版本折叠起来（强烈推荐，这样可以做到单词添加完毕后再手动执行插件）
 
 ![step4](https://github.com/user-attachments/assets/bd07333a-2b5d-4586-9d41-1bd1f84a35cc)
+
+## 注意事项
+1. 例句录入失败的多数原因是单词未在墨墨词库中收录，请去除单词时态等等重新尝试
+2. 单词录入不会判断该单词是否存在于墨墨词库，云词本可以添加任意文本，但也只有墨墨词库中收录的词汇才能进行学习
 
 ## 致谢
 首先要感谢 Bob 翻译的开发者 [@ripperhe](https://github.com/ripperhe)，感谢他开发了如此优秀的翻译软件，并设计了插件系统，没有这些努力，也不会有这个插件。初期在构思这个插件的时候，和他还进行了一些交流，感谢他提供的思路和指导。
