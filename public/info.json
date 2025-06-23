@@ -1,6 +1,6 @@
 {
   "identifier": "cc.chriscurry.bobplugin.maimemo.notebook",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "category": "translate",
   "name": "墨墨云词本",
   "summary": "导入查询单词到墨墨云词本，且支持关联查询句子和译文",
