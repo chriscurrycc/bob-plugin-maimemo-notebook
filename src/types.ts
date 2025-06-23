@@ -4,6 +4,8 @@ interface PluginOption {
   bigModelApiKey?: string;
   canAddSentence: string;
   notepadId?: string;
+  openaiApiKey?: string;
+  openaiModel: string;
 }
 
 interface BobTranslationResult {

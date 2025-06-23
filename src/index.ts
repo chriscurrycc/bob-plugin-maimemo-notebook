@@ -4,7 +4,7 @@ import {
   addWordsToNotepad,
   notepadIdFilePath,
 } from "./maimemo";
-import { translateByBigModel } from "./translate";
+import { translateByLLM } from "./translate";
 import { BobQuery, BobTranslationErrorType } from "./types";
 
 export function supportLanguages() {
@@ -18,6 +18,7 @@ export function translate(query: BobQuery) {
     notepadId: _notepadId,
     canAddSentence: _canAddSentence,
     bigModelApiKey,
+    openaiApiKey,
   } = $option;
 
   if (detectFrom !== "en") {
@@ -49,7 +50,7 @@ export function translate(query: BobQuery) {
     .split(",")
     .map((word) => word.trim())
     .filter((word) => !!word && word.split(/\s+/).length < 3);
-  const sentence = paragraphs[1]?.trim();
+  const sentence = paragraphs[1]?.trim?.() || "";
   let notepadId = _notepadId;
 
   if (!maimemoToken) {
@@ -75,62 +76,70 @@ export function translate(query: BobQuery) {
   // Create sample sentence for words
   let finished = false;
   let partMessage = "";
-  if (canAddSentence && sentence && bigModelApiKey) {
-    translateByBigModel(sentence)
-      .then((translation) => {
-        const tasks = words.map((word) =>
-          addSentenceToWord(word, sentence, translation)
-        );
-        Promise.allSettled(tasks).then((results) => {
-          const hasAnySuccess = results.some(
-            (task) => task.status === "fulfilled"
+  if (canAddSentence) {
+    if (!sentence) {
+      partMessage = "例句创建失败（未检测到例句）";
+      finished = true;
+    } else if (!bigModelApiKey && !openaiApiKey) {
+      partMessage = "例句创建失败（未配置大模型 API Key）";
+      finished = true;
+    } else {
+      translateByLLM(sentence)
+        .then((translation) => {
+          const tasks = words.map((word) =>
+            addSentenceToWord(word, sentence, translation)
           );
+          Promise.allSettled(tasks).then((results) => {
+            const hasAnySuccess = results.some(
+              (task) => task.status === "fulfilled"
+            );
 
-          if (finished) {
-            if (hasAnySuccess) {
-              onCompletion({
-                result: {
-                  toParagraphs: [
-                    `${partMessage ? partMessage + "，" : ""}例句创建成功`,
-                  ],
-                },
-              });
+            if (finished) {
+              if (hasAnySuccess) {
+                onCompletion({
+                  result: {
+                    toParagraphs: [
+                      `${partMessage ? partMessage + "，" : ""}例句创建成功`,
+                    ],
+                  },
+                });
+              } else {
+                const failReason = results.find(
+                  (task) => task.status === "rejected"
+                )?.reason;
+
+                onCompletion({
+                  error: {
+                    type: BobTranslationErrorType.Network,
+                    message: `${
+                      partMessage ? partMessage + "，" : ""
+                    }例句创建失败（${failReason}）`,
+                  },
+                });
+              }
             } else {
-              const failReason = results.find(
-                (task) => task.status === "rejected"
-              )?.reason;
-
-              onCompletion({
-                error: {
-                  type: BobTranslationErrorType.Network,
-                  message: `${
-                    partMessage ? partMessage + "，" : ""
-                  }例句创建失败（${failReason}）`,
-                },
-              });
+              partMessage = `例句创建${hasAnySuccess ? "成功" : "失败"}`;
+              finished = true;
             }
+          });
+        })
+        .catch((error) => {
+          const currentPartMessage = `例句创建失败（${error.message}）`;
+          if (finished) {
+            onCompletion({
+              error: {
+                type: BobTranslationErrorType.Network,
+                message: `${
+                  partMessage ? partMessage + "，" : ""
+                }${currentPartMessage}`,
+              },
+            });
           } else {
-            partMessage = `例句创建${hasAnySuccess ? "成功" : "失败"}`;
+            partMessage = currentPartMessage;
             finished = true;
           }
         });
-      })
-      .catch((error) => {
-        const currentPartMessage = `例句创建失败（${error.message}）`;
-        if (finished) {
-          onCompletion({
-            error: {
-              type: BobTranslationErrorType.Network,
-              message: `${
-                partMessage ? partMessage + "，" : ""
-              }${currentPartMessage}`,
-            },
-          });
-        } else {
-          partMessage = currentPartMessage;
-          finished = true;
-        }
-      });
+    }
   } else {
     finished = true;
   }

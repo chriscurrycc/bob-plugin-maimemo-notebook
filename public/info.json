@@ -48,6 +48,28 @@
       "isKeyOption": true
     },
     {
+      "identifier": "openaiApiKey",
+      "type": "text",
+      "title": "OpenAI API 密钥",
+      "desc": "可前往 https://platform.openai.com/api-keys 查询已有 API 密钥。在配置了 OpenAI API 密钥后，将优先使用 OpenAI 而不是智谱"
+    },
+    {
+      "identifier": "openaiModel",
+      "type": "menu",
+      "title": "OpenAI 模型",
+      "menuValues": [
+        {
+          "value": "gpt-4.1-mini",
+          "title": "GPT-4.1 mini"
+        },
+        {
+          "value": "gpt-4.1",
+          "title": "GPT-4.1"
+        }
+      ],
+      "defaultValue": "gpt-4.1-mini"
+    },
+    {
       "identifier": "bigModelApiKey",
       "type": "text",
       "title": "智谱 API 密钥"

@@ -1,6 +1,8 @@
 const bigModelApiEndpoint =
   "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
+const openaiApiEndpoint = "https://api.openai.com/v1/responses";
+
 interface BigModelCompletionResponse {
   choices?: {
     message?: {
@@ -9,7 +11,15 @@ interface BigModelCompletionResponse {
   }[];
 }
 
-export function initBigModelReqBody(sentence: string) {
+interface OpenAIResponse {
+  output?: {
+    content?: {
+      text: string;
+    }[];
+  }[];
+}
+
+function getPrompt() {
   const detectFrom = "英语";
   const detectTo = "中文简体";
   const prompt =
@@ -35,22 +45,37 @@ export function initBigModelReqBody(sentence: string) {
     "表达习惯,并加以语法润色。" +
     "4. 请只输出最终翻译文本。";
 
-  return {
-    model: $option.bigModelModel,
-    messages: [
-      {
-        role: "system",
-        content: prompt,
-      },
-      {
-        role: "user",
-        content: sentence,
-      },
-    ],
-  };
+  return prompt;
 }
 
-export async function translateByBigModel(sentence: string) {
+async function translateByOpenAI(sentence: string) {
+  return $http
+    .request<OpenAIResponse>({
+      method: "POST",
+      url: openaiApiEndpoint,
+      header: {
+        Authorization: `Bearer ${$option.openaiApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: {
+        model: $option.openaiModel,
+        instructions: getPrompt(),
+        input: sentence,
+      },
+    })
+    .then((_resp) => {
+      const resp = _resp.data;
+      const translation = resp.output?.[0]?.content?.[0]?.text;
+
+      if (translation) {
+        return translation;
+      } else {
+        throw new Error("例句翻译失败");
+      }
+    });
+}
+
+async function translateByBigModel(sentence: string) {
   return $http
     .request<BigModelCompletionResponse>({
       method: "POST",
@@ -59,7 +84,19 @@ export async function translateByBigModel(sentence: string) {
         Authorization: $option.bigModelApiKey!,
         "Content-Type": "application/json",
       },
-      body: initBigModelReqBody(sentence),
+      body: {
+        model: $option.bigModelModel,
+        messages: [
+          {
+            role: "system",
+            content: prompt,
+          },
+          {
+            role: "user",
+            content: sentence,
+          },
+        ],
+      },
     })
     .then((_resp) => {
       const resp = _resp.data;
@@ -71,4 +108,12 @@ export async function translateByBigModel(sentence: string) {
         throw new Error("例句翻译失败");
       }
     });
+}
+
+export async function translateByLLM(sentence: string) {
+  if ($option.openaiApiKey) {
+    return translateByOpenAI(sentence);
+  } else {
+    return translateByBigModel(sentence);
+  }
 }
