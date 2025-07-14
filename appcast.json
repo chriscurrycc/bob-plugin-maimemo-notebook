@@ -2,6 +2,14 @@
   "identifier": "cc.chriscurry.bobplugin.maimemo.notebook",
   "versions": [
     {
+      "version": "v0.2.1",
+      "desc": "Fix bugs",
+      "sha256": "8d7111f00ed637b0395f49c4f68a47694d8b55a788647fd5c49717f1c1bd2d7c",
+      "url": "https://github.com/chriscurrycc/bob-plugin-maimemo-notebook/releases/download/v0.2.1/bobplugin-maimemo-notebook.bobplugin",
+      "minBobVersion": "0.5.0",
+      "timestamp": 1752496564669
+    },
+    {
       "version": "v0.2.0",
       "desc": "Add OpenAI support",
       "sha256": "83be4693a7b18ff5a43f0e335417fd2dbdca7e0cb194e2cb33c92064087180ad",
