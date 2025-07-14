@@ -89,7 +89,7 @@ async function translateByBigModel(sentence: string) {
         messages: [
           {
             role: "system",
-            content: prompt,
+            content: getPrompt(),
           },
           {
             role: "user",
