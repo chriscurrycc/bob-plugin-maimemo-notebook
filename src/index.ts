@@ -5,6 +5,7 @@ import {
   notepadIdFilePath,
 } from "./maimemo";
 import { translateByLLM } from "./translate";
+import { parseMarkedInput } from "./analyze";
 import { BobQuery, BobTranslationErrorType } from "./types";
 
 export function supportLanguages() {
@@ -19,6 +20,12 @@ export function translate(query: BobQuery) {
     canAddSentence: _canAddSentence,
     bigModelApiKey,
     openaiApiKey,
+    markWordsEnabled,
+    wordMarkerPrefix,
+    wordMarkerSuffix,
+    maxMarkedWordTokens,
+    overrideCanAddSentenceWhenMarked,
+    stripMarkersBeforeTranslate,
   } = $option;
 
   if (detectFrom !== "en") {
@@ -31,26 +38,35 @@ export function translate(query: BobQuery) {
     return;
   }
 
-  const wordNum = text.trim().split(/\s+/);
-  const maybeSentence = wordNum.length > 2;
   const canAddSentence = _canAddSentence === "true";
 
-  if (maybeSentence && !canAddSentence) {
-    onCompletion({
-      error: {
-        type: BobTranslationErrorType.NotFound,
-        message: "未检测到单词",
-      },
+  let words: string[] = [];
+  let sentence = "";
+  let usedMarkerMode = false;
+
+  const enableMarker = (markWordsEnabled ?? "true") !== "false";
+  if (enableMarker) {
+    const parsed = parseMarkedInput(text, {
+      prefix: (wordMarkerPrefix || ">>").trim() || ">>",
+      suffix: (wordMarkerSuffix || "").trim(),
+      maxTokens: Math.max(1, parseInt(maxMarkedWordTokens || "4", 10) || 4),
+      stripMarkers: (stripMarkersBeforeTranslate ?? "true") !== "false",
     });
-    return;
+    if (parsed.words.length > 0) {
+      words = parsed.words;
+      sentence = parsed.cleanedSentence;
+      usedMarkerMode = true;
+    }
   }
 
-  const paragraphs = text.split("\n").filter((line) => !!line.trim());
-  const words = paragraphs[0]
-    .split(",")
-    .map((word) => word.trim())
-    .filter((word) => !!word && word.split(/\s+/).length < 3);
-  const sentence = paragraphs[1]?.trim?.() || "";
+  if (!usedMarkerMode) {
+    const paragraphs = text.split("\n").filter((line) => !!line.trim());
+    words = paragraphs[0]
+      .split(/[,，]/)
+      .map((word) => word.trim())
+      .filter((word) => !!word && word.split(/\s+/).length <= 4);
+    sentence = paragraphs[1]?.trim?.() || "";
+  }
   let notepadId = _notepadId;
 
   if (!maimemoToken) {
@@ -76,7 +92,12 @@ export function translate(query: BobQuery) {
   // Create sample sentence for words
   let finished = false;
   let partMessage = "";
-  if (canAddSentence) {
+  let shouldAddSentence = canAddSentence;
+  if (usedMarkerMode && (overrideCanAddSentenceWhenMarked ?? "true") !== "false") {
+    shouldAddSentence = true;
+  }
+
+  if (shouldAddSentence) {
     if (!sentence) {
       partMessage = "例句创建失败（未检测到例句）";
       finished = true;
