@@ -1,7 +1,10 @@
 const bigModelApiEndpoint =
   "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
-const openaiApiEndpoint = "https://api.openai.com/v1/responses";
+function getOpenAIEndpoint() {
+  const base = ($option.openaiBaseUrl || "https://api.openai.com").replace(/\/$/, "");
+  return `${base}/v1/responses`;
+}
 
 interface BigModelCompletionResponse {
   choices?: {
@@ -52,7 +55,7 @@ async function translateByOpenAI(sentence: string) {
   return $http
     .request<OpenAIResponse>({
       method: "POST",
-      url: openaiApiEndpoint,
+      url: getOpenAIEndpoint(),
       header: {
         Authorization: `Bearer ${$option.openaiApiKey}`,
         "Content-Type": "application/json",
