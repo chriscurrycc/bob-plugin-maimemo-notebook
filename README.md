@@ -66,9 +66,11 @@
 
 5. 把 Token 填入 Bob 偏好设置 > 服务 > 此插件配置界面的「墨墨开放 API Token」的输入框中
 
+![step2](https://github.com/user-attachments/assets/af829e76-f990-4419-bbd9-e4a5f41e1899)
+
 > 插件会帮你生成一个「Bob Plugin」的云词本来录入在 Bob 查询的生词。如果想把生词添加到自己已有的云词本，也可以在[墨墨开放 API 平台](https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads)查询自己的云词本列表，并把对应词本 ID 复制填入到「墨墨云词本 ID」配置项
 
-![step2](https://github.com/user-attachments/assets/af829e76-f990-4419-bbd9-e4a5f41e1899)
+![Find your own notepad id](https://webp.chriscurry.cc/uZNenI.jpg)
 
 6. 保存配置
 
