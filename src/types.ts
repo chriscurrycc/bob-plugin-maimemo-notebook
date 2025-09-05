@@ -6,6 +6,14 @@ interface PluginOption {
   notepadId?: string;
   openaiApiKey?: string;
   openaiModel: string;
+  openaiBaseUrl?: string;
+  // marker-based input options
+  markWordsEnabled?: string;
+  wordMarkerPrefix?: string;
+  wordMarkerSuffix?: string;
+  maxMarkedWordTokens?: string;
+  overrideCanAddSentenceWhenMarked?: string;
+  stripMarkersBeforeTranslate?: string;
 }
 
 interface BobTranslationResult {

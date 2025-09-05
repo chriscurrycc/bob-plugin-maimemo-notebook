@@ -22,10 +22,7 @@
       "identifier": "notepadId",
       "type": "text",
       "title": "墨墨云词本 ID",
-      "desc": "请前往 https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads 查询已有云词本。如果不填，则默认创建一个新词本",
-      "textConfig": {
-        "type": "secure"
-      }
+      "desc": "请前往 https://open.maimemo.com/#/operations/maimemo.openapi.notepad.v1.NotepadService.ListNotepads 查询已有云词本。如果不填，则默认创建一个新词本"
     },
     {
       "identifier": "canAddSentence",
@@ -48,71 +45,119 @@
       "isKeyOption": true
     },
     {
+      "identifier": "markWordsEnabled",
+      "type": "menu",
+      "title": "启用标记模式（>>）",
+      "desc": "在原句中用 >> 标注需加入词库的词或短语，例如：I like >>apple and >>banana.",
+      "menuValues": [
+        { "value": "true", "title": "是" },
+        { "value": "false", "title": "否" }
+      ],
+      "defaultValue": "true"
+    },
+    {
+      "identifier": "wordMarkerPrefix",
+      "type": "text",
+      "title": "标记前缀",
+      "desc": "用于标注目标词/短语的前缀符号，默认 >>",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": ">>"
+      },
+      "defaultValue": ">>"
+    },
+    {
+      "identifier": "wordMarkerSuffix",
+      "type": "text",
+      "title": "标记后缀（可选）",
+      "desc": "若填写（如 <<），可用于包裹短语：>>New York<<",
+      "defaultValue": "",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "<<"
+      }
+    },
+    {
+      "identifier": "maxMarkedWordTokens",
+      "type": "text",
+      "title": "标记短语最大词数",
+      "desc": "限制短语的最大词数，默认 4",
+      "defaultValue": "4",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "4"
+      }
+    },
+    {
+      "identifier": "overrideCanAddSentenceWhenMarked",
+      "type": "menu",
+      "title": "命中标记时强制添加例句",
+      "desc": "当文本中存在标记词时，忽略“添加例句到生词”的开关，强制添加例句并翻译。",
+      "menuValues": [
+        { "value": "true", "title": "是" },
+        { "value": "false", "title": "否" }
+      ],
+      "defaultValue": "true"
+    },
+    {
+      "identifier": "stripMarkersBeforeTranslate",
+      "type": "menu",
+      "title": "翻译前移除标记符",
+      "desc": "将 >> 与可选的后缀标记从句子中移除后再发送给翻译模型",
+      "menuValues": [
+        { "value": "true", "title": "是" },
+        { "value": "false", "title": "否" }
+      ],
+      "defaultValue": "true"
+    },
+    {
       "identifier": "openaiApiKey",
       "type": "text",
       "title": "OpenAI API 密钥",
-      "desc": "可前往 https://platform.openai.com/api-keys 查询已有 API 密钥。在配置了 OpenAI API 密钥后，将优先使用 OpenAI 而不是智谱"
+      "desc": "可前往 https://platform.openai.com/api-keys 查询已有 API 密钥。在配置了 OpenAI API 密钥后，将优先使用 OpenAI 而不是智谱",
+      "textConfig": {
+        "type": "secure"
+      }
+    },
+    {
+      "identifier": "openaiBaseUrl",
+      "type": "text",
+      "title": "OpenAI Base URL",
+      "desc": "可选：自定义 OpenAI 兼容接口的 Base URL，例如企业代理或自建兼容服务，默认为 https://api.openai.com，示例：https://xxxxx.com/",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "https://xxxxx.com/"
+      }
     },
     {
       "identifier": "openaiModel",
-      "type": "menu",
+      "type": "text",
       "title": "OpenAI 模型",
-      "menuValues": [
-        {
-          "value": "gpt-4.1-mini",
-          "title": "GPT-4.1 mini"
-        },
-        {
-          "value": "gpt-4.1",
-          "title": "GPT-4.1"
-        }
-      ],
-      "defaultValue": "gpt-4.1-mini"
+      "desc": "可手动输入自定义模型名（例如 gpt-4o、gpt-4.1-mini 或兼容服务的模型标识）。未填写时将使用默认值。",
+      "defaultValue": "gpt-4.1-mini",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "gpt-4.1-mini"
+      }
     },
     {
       "identifier": "bigModelApiKey",
       "type": "text",
-      "title": "智谱 API 密钥"
+      "title": "智谱 API 密钥",
+      "textConfig": {
+        "type": "secure"
+      }
     },
     {
       "identifier": "bigModelModel",
-      "type": "menu",
+      "type": "text",
       "title": "智谱语言模型",
+      "desc": "可手动输入智谱模型名称（例如 GLM-4-Flash、GLM-4-Air、GLM-4-Plus 等）。未填写时将使用默认值。",
       "defaultValue": "GLM-4-Flash",
-      "menuValues": [
-        {
-          "title": "高智能旗舰[GLM-4-Plus]",
-          "value": "GLM-4-Plus"
-        },
-        {
-          "title": "超长输入[GLM-4-Long]",
-          "value": "GLM-4-Long"
-        },
-        {
-          "title": "极速推理[GLM-4-AirX]",
-          "value": "GLM-4-AirX"
-        },
-        {
-          "title": "高性价比[GLM-4-Air]",
-          "value": "GLM-4-Air"
-        },
-        {
-          "title": "免费调用[GLM-4-Flash]",
-          "value": "GLM-4-Flash"
-        },
-        {
-          "title": "高速低价[GLM-4-FlashX]",
-          "value": "GLM-4-FlashX"
-        },
-        {
-          "title": "Agent模型[GLM-4-AllTools]",
-          "value": "GLM-4-AllTools"
-        },
-        {
-          "title": "旧版旗舰[GLM-4]",
-          "value": "GLM-4"
-        }
-      ]
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "GLM-4-Flash"
+      }
     }
   ]
 }
