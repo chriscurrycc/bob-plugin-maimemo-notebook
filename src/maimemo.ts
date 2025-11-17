@@ -89,36 +89,61 @@ export async function addWordsToNotepad(notepadId: string, words: string[]) {
           lines.unshift(`# ${todayDate}`);
           targetLineIndex = 0;
         }
-        lines.splice(targetLineIndex + 1, 0, ...words);
+
+        // 去重：从 words 中移除已存在于 lines 中的单词
+        const linesSet = new Set(lines.map(line => line.trim().toLowerCase()));
+        const uniqueWords = [];
+        const duplicateWords = [];
+        for (const word of words) {
+          const trimmedWord = word.trim().toLowerCase();
+          if (linesSet.has(trimmedWord)) {
+            duplicateWords.push(word);
+          } else {
+            uniqueWords.push(word);
+          }
+        }
+
+        lines.splice(targetLineIndex + 1, 0, ...uniqueWords);
 
         return {
-          status,
-          content: lines.join("\n"),
-          title,
-          brief,
-          tags,
+          notepad: {
+            status,
+            content: lines.join("\n"),
+            title,
+            brief,
+            tags,
+          },
+          uniqueWords,
+          duplicateWords,
         };
       } else {
         throw new Error("添加单词到云词本失败（未找到云词本）");
       }
     })
-    .then((notepad) => {
+    .then((result) => {
       return $http.request<MaimemoNotepadResponse>({
         method: "POST",
         url: `${apiEndpoint}/notepads/${notepadId}`,
         header,
         body: {
-          notepad,
+          notepad: result.notepad,
         },
+      }).then((_resp) => {
+        const resp = _resp.data;
+        if (resp?.success) {
+          // 构建返回消息
+          const messages = [];
+          if (result.uniqueWords.length > 0) {
+            messages.push(`单词 ${result.uniqueWords.join(", ")} 已添加到云词本`);
+          }
+          if (result.duplicateWords.length > 0) {
+            messages.push(`${result.duplicateWords.join(", ")} 在云词本中已存在`);
+          }
+          return messages.join("；");
+        } else {
+          throw new Error("添加单词到云词本失败");
+        }
       });
-    })
-    .then((_resp) => {
-      const resp = _resp.data;
-      if (resp?.success) {
-        return `单词 ${words.join(", ")} 已添加到云词本`;
-      } else {
-        throw new Error("添加单词到云词本失败");
-      }
     });
 }
 
