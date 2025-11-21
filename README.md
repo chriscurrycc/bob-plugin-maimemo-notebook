@@ -16,7 +16,7 @@
   </p>
 </div>
 
-> 我开发了一个 iOS 快捷指令来实现同样的功能，如果你是 iPhone/iPad 用户，请[点击此处查看使用文档](https://memo.chriscurry.cc/m/NtMnTGVJfkXuLoRJaMYKy5)
+> 我开发了一个苹果快捷指令来实现同样的功能，可以借助 AI 实现自动分词，建议使用这个快捷指令。[点击此处查看使用文档](https://memo.chriscurry.cc/m/NtMnTGVJfkXuLoRJaMYKy5)
 
 ## 演示
 
