@@ -1,6 +1,6 @@
 {
   "name": "bobplugin-maimemo-notebook",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Bob 查询的单词导入到墨墨背单词",
   "author": {
     "name": "Chris Curry",
