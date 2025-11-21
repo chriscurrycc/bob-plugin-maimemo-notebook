@@ -2,6 +2,14 @@
   "identifier": "cc.chriscurry.bobplugin.maimemo.notebook",
   "versions": [
     {
+      "version": "0.3.0",
+      "desc": "Filter out previously added vocabulary when adding new words",
+      "sha256": "f54be5d97956f585b316ae4211920ce67743514e5d6ab753826097e7c7d77c15",
+      "url": "https://github.com/chriscurrycc/bob-plugin-maimemo-notebook/releases/download/v0.3.0/bobplugin-maimemo-notebook.bobplugin",
+      "minBobVersion": "0.5.0",
+      "timestamp": 1763717138018
+    },
+    {
       "version": "0.2.1",
       "desc": "Fix bugs",
       "sha256": "667f959688af41f5c0b81329dcd4264654495741cdebd386234d24b9c07bd613",
