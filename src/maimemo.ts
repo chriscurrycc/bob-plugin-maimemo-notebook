@@ -90,13 +90,18 @@ export async function addWordsToNotepad(notepadId: string, words: string[]) {
           targetLineIndex = 0;
         }
 
-        // 去重：从 words 中移除已存在于 lines 中的单词
-        const linesSet = new Set(lines.map(line => line.trim().toLowerCase()));
+        // Deduplicate: filter out words that already exist in lines
+        // Only check actual word entries, exclude headers (lines starting with #) and empty lines
+        const existingWords = new Set(
+          lines
+            .filter(line => line && !line.startsWith('#'))
+            .map(line => line.trim().toLowerCase())
+        );
         const uniqueWords = [];
         const duplicateWords = [];
         for (const word of words) {
           const trimmedWord = word.trim().toLowerCase();
-          if (linesSet.has(trimmedWord)) {
+          if (existingWords.has(trimmedWord)) {
             duplicateWords.push(word);
           } else {
             uniqueWords.push(word);
@@ -131,7 +136,6 @@ export async function addWordsToNotepad(notepadId: string, words: string[]) {
       }).then((_resp) => {
         const resp = _resp.data;
         if (resp?.success) {
-          // 构建返回消息
           const messages = [];
           if (result.uniqueWords.length > 0) {
             messages.push(`单词 ${result.uniqueWords.join(", ")} 已添加到云词本`);
